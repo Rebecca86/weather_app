@@ -2,8 +2,14 @@ function displayTemperature(response) {
   let temperatureElement = document.querySelector("#current-temperature");
   let temperature = Math.round(response.data.temperature.current);
   let cityElement = document.querySelector("#current-city");
+  let weatherCondition = document.querySelector("#current-weather-description");
+  let humidity = document.querySelector("#humidity");
+  let windSpeed = document.querySelector("#windSpeed");
+  let icon = document.querySelector("#icon");
+  console.log(response.data);
   cityElement.innerHTML = response.data.city;
   temperatureElement.innerHTML = temperature;
+  weatherCondition.innerHTML = response.data.condition.description;
 }
 
 function search(event) {
@@ -37,7 +43,7 @@ function formatDate(date) {
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday"
+    "Saturday",
   ];
 
   let formattedDay = days[day];
@@ -49,5 +55,4 @@ searchForm.addEventListener("submit", search);
 
 let currentDateELement = document.querySelector("#current-date");
 let currentDate = new Date();
-
 currentDateELement.innerHTML = formatDate(currentDate);
