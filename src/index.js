@@ -1,15 +1,20 @@
 function displayTemperature(response) {
   let temperatureElement = document.querySelector("#current-temperature");
-  let temperature = Math.round(response.data.temperature.current);
   let cityElement = document.querySelector("#current-city");
   let weatherCondition = document.querySelector("#current-weather-description");
   let humidity = document.querySelector("#humidity");
   let windSpeed = document.querySelector("#windSpeed");
-  let icon = document.querySelector("#icon");
+  let icon = document.querySelector(".current-temperature-icon");
   console.log(response.data);
   cityElement.innerHTML = response.data.city;
+  let temperature = Math.round(response.data.temperature.current);
   temperatureElement.innerHTML = temperature;
   weatherCondition.innerHTML = response.data.condition.description;
+  humidity.innerHTML = response.data.temperature.humidity;
+  windSpeed.innerHTML = response.data.wind.speed;
+  let imgURL = response.data.condition.icon_url;
+  let imgDescription = response.data.condition.icon;
+  icon.innerHTML = `<img src="${imgURL}" alt="${imgDescription}" />`;
 }
 
 function search(event) {
