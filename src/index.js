@@ -1,3 +1,37 @@
+function formatForecastDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  return days[date.getDay()];
+}
+
+function displayForecast(response) {
+  console.log(response.data);
+
+  let dailyHTMLElement = "";
+
+  response.data.daily.forEach(function (day, index) {
+    if (index < 5) {
+      let dayName = formatForecastDay(day.time);
+      let imgUrl = `<img src="${day.condition.icon_url}" />`;
+      let maxTemp = Math.round(day.temperature.maximum);
+      let minTemp = Math.round(day.temperature.minimum);
+      dailyHTMLElement += `<div class="horizontal-forecast-daily">
+            <div class="forecast-bundle-in-container">
+            <div class="forecast-day">${dayName}</div>
+            <div class="forecast-icon">${imgUrl}</div>
+            <div class="forecast-temperatures">
+              <span class="forecast-temp-value"><strong>${maxTemp}°</strong></span>
+              <span class="forecast-temp-value">${minTemp}°</span>
+            </div>
+           </div>
+          </div>`;
+    }
+  });
+  let forecastElement = document.querySelector("#forecast-weather-container");
+  forecastElement.innerHTML = dailyHTMLElement;
+}
+
 function formatDate(date) {
   let minutes = date.getMinutes();
   let hours = date.getHours();
@@ -32,8 +66,8 @@ function displayTemperature(response) {
   let humidity = document.querySelector("#humidity");
   let windSpeed = document.querySelector("#windSpeed");
   let icon = document.querySelector(".current-temperature-icon");
-  console.log(response.data);
-  cityElement.innerHTML = response.data.city;
+  let city = response.data.city;
+  cityElement.innerHTML = city;
   let temperature = Math.round(response.data.temperature.current);
   temperatureElement.innerHTML = temperature;
   weatherCondition.innerHTML = response.data.condition.description;
@@ -44,6 +78,11 @@ function displayTemperature(response) {
   icon.innerHTML = `<img src="${imgURL}" alt="${imgDescription}" />`;
   let cityDate = new Date(response.data.time * 1000);
   currentDateELement.innerHTML = formatDate(cityDate);
+
+  //forecast
+  let forecastApiKey = "f300cf6ad21c42dc4f0oefe03b237t4a";
+  let forecastApiURL = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${forecastApiKey}`;
+  axios.get(forecastApiURL).then(displayForecast);
 }
 
 function search(event) {
